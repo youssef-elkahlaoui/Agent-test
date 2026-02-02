@@ -1,0 +1,31 @@
+# Required packages for Morocco Product Search Agent with LangChain
+
+# LangChain and AI
+langchain>=0.1.0
+langchain-openai>=0.0.5
+langchain-community>=0.0.20
+openai>=1.12.0
+
+# Alternative LLM providers (optional)
+langchain-anthropic>=0.1.0
+langchain-google-genai>=0.0.6
+
+# Web scraping
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+selenium>=4.16.0
+
+# Data handling
+pandas>=2.0.0
+
+# Vector stores (for semantic search)
+chromadb>=0.4.22
+faiss-cpu>=1.7.4
+
+# Utilities
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+
+# Rate limiting
+ratelimit>=2.2.1
