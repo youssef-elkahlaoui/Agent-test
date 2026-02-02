@@ -4,8 +4,8 @@ Main entry point for the AI-powered product search agent
 """
 
 from agent.langchain_agent import MoroccoSearchAgent
-import sys
 
+import sys
 
 def main():
     """Main function to run the LangChain-powered product search agent"""
@@ -92,3 +92,5 @@ if __name__ == "__main__":
         import traceback
 
         traceback.print_exc()
+
+
