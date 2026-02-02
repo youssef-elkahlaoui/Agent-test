@@ -3,7 +3,7 @@ LangChain Agent for Morocco Product Search
 This is the main AI agent that uses LangChain to intelligently search and compare prices
 """
 
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain.prompts import PromptTemplate
 from langchain.memory import ConversationBufferMemory
@@ -21,26 +21,27 @@ class MoroccoSearchAgent:
     This agent can reason about which stores to check and how to compare prices
     """
     
-    def __init__(self, model="gpt-4", temperature=0):
+    def __init__(self, model="gemini-1.5-pro", temperature=0):
         """
         Initialize the LangChain agent
         
         Args:
-            model: OpenAI model to use (gpt-4, gpt-3.5-turbo, etc.)
+            model: Google Gemini model to use (gemini-1.5-pro, gemini-1.5-flash, gemini-pro, etc.)
             temperature: Temperature for the model (0 = more focused, 1 = more creative)
         """
         # Check for API key
-        if not os.getenv("OPENAI_API_KEY"):
+        if not os.getenv("GOOGLE_API_KEY"):
             raise ValueError(
-                "OPENAI_API_KEY not found. Please create a .env file with your API key.\n"
-                "Copy .env.example to .env and add your key."
+                "GOOGLE_API_KEY not found. Please create a .env file with your API key.\n"
+                "Copy .env.example to .env and add your Google API key.\n"
+                "Get your key from: https://makersuite.google.com/app/apikey"
             )
         
-        # Initialize LLM
-        self.llm = ChatOpenAI(
+        # Initialize LLM (Google Gemini)
+        self.llm = ChatGoogleGenerativeAI(
             model=model,
             temperature=temperature,
-            api_key=os.getenv("OPENAI_API_KEY")
+            google_api_key=os.getenv("GOOGLE_API_KEY")
         )
         
         # Create the agent prompt

@@ -17,15 +17,16 @@ def main():
 
     try:
         # Initialize the LangChain agent
-        print("🔧 Initializing AI agent...")
-        agent = MoroccoSearchAgent(model="gpt-4", temperature=0)
+        print("🔧 Initializing AI agent with Google Gemini...")
+        agent = MoroccoSearchAgent(model="gemini-1.5-pro", temperature=0)
         print("✅ Agent ready!\n")
 
     except ValueError as e:
         print(f"\n❌ Configuration Error: {e}")
         print("\nSetup Instructions:")
         print("1. Copy .env.example to .env")
-        print("2. Add your OpenAI API key to the .env file")
+        print("2. Add your Google API key to the .env file")
+        print("   Get it from: https://makersuite.google.com/app/apikey")
         print("3. Run the program again")
         return
     except Exception as e:

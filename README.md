@@ -4,7 +4,7 @@ An **AI-powered LangChain agent** for intelligently searching products across Mo
 
 ## 🌟 Features
 
-- 🤖 **AI-Powered Agent** - Uses LangChain with GPT-4 for intelligent reasoning
+- 🤖 **AI-Powered Agent** - Uses LangChain with Google Gemini for intelligent reasoning
 - 🔍 Multi-store search across Moroccan e-commerce platforms
 - 💰 Automatic price comparison (cheapest to most expensive)
 - 🧠 Smart decision-making about which stores to check
@@ -35,10 +35,11 @@ pip install -r requirements.txt
 
 3. Set up your API key:
    - Copy `.env.example` to `.env`
-   - Add your OpenAI API key to the `.env` file:
+   - Add your Google API key to the `.env` file:
      ```
-     OPENAI_API_KEY=your_api_key_here
+     GOOGLE_API_KEY=your_api_key_here
      ```
+   - Get your free API key from: https://makersuite.google.com/app/apikey
 
 ## 💻 Usage
 
@@ -152,11 +153,11 @@ Then add it to `MOROCCO_SEARCH_TOOLS` list.
 
 ### API Keys
 
-The agent requires an OpenAI API key. Get one from [platform.openai.com](https://platform.openai.com/api-keys)
+The agent uses **Google Gemini** by default. Get a free API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
 
 ```bash
 # .env file
-OPENAI_API_KEY=sk-...your-key-here...
+GOOGLE_API_KEY=your-key-here
 ```
 
 ### Changing the LLM Model
@@ -165,24 +166,33 @@ Edit [agent/langchain_agent.py](agent/langchain_agent.py):
 
 ```python
 agent = MoroccoSearchAgent(
-    model="gpt-3.5-turbo",  # Cheaper, faster
-    # or model="gpt-4"       # More capable, slower
+    model="gemini-1.5-pro",      # Default: Most capable Gemini
+    # or model="gemini-1.5-flash"  # Faster, cheaper
+    # or model="gemini-pro"        # Previous generation
     temperature=0
 )
 ```
 
 ### Alternative LLM Providers
 
-You can use Claude (Anthropic) or Gemini (Google) instead:
+You can switch to OpenAI GPT or Claude (Anthropic):
 
+**For OpenAI GPT:**
 ```python
-# For Claude
-from langchain_anthropic import ChatAnthropic
-self.llm = ChatAnthropic(model="claude-3-sonnet-20240229")
+from langchain_openai import ChatOpenAI
+self.llm = ChatOpenAI(
+    model="gpt-4",
+    api_key=os.getenv("OPENAI_API_KEY")
+)
+```
 
-# For Gemini
-from langchain_google_genai import ChatGoogleGenerativeAI
-self.llm = ChatGoogleGenerativeAI(model="gemini-pro")
+**For Claude (Anthropic):**
+```python
+from langchain_anthropic import ChatAnthropic
+self.llm = ChatAnthropic(
+    model="claude-3-5-sonnet-20241022",
+    api_key=os.getenv("ANTHROPIC_API_KEY")
+)
 ```
 
 Currently uses mock data for demonstration. To enable real scraping:
@@ -195,8 +205,8 @@ Currently uses mock data for demonstration. To enable real scraping:
 ## 📦 Key Dependencies
 
 - **LangChain** - AI agent framework
-- **OpenAI** - GPT models for intelligence
-- `langchain-openai` - OpenAI integration
+- **Google Gemini** - AI model for intelligence (free tier available)
+- `langchain-google-genai` - Google Gemini integration
 - `langchain-community` - Community tools
 - `requests` - HTTP requests
 - `beautifulsoup4` - HTML parsing
@@ -206,7 +216,8 @@ Currently uses mock data for demonstration. To enable real scraping:
 ## 📝 Notes
 
 - **AI Agent**: This uses LangChain's ReAct agent pattern with reasoning capabilities
-- **API Costs**: Using GPT-4 costs money per request; GPT-3.5-turbo is cheaper
+- **Free API**: Google Gemini offers a generous free tier (unlike OpenAI)
+- **API Costs**: Gemini 1.5 Flash is very cost-effective; Pro model for complex reasoning
 - Always respect websites' `robots.txt` and terms of service
 - Consider rate limiting to avoid overloading servers
 - Some sites may require authentication or have anti-scraping measures
