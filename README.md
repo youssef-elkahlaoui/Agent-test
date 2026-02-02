@@ -16,6 +16,7 @@ An **AI-powered LangChain agent** for intelligently searching products across Mo
 ## 🚀 What Makes This Different
 
 This is **NOT** a simple automation script. It's a **LangChain-powered AI agent** that:
+
 - Reasons about which stores to search
 - Decides the best search strategy
 - Understands natural language queries
@@ -90,25 +91,28 @@ You: What about gaming laptops?
 ```
 
 #1
-  Product:      laptop - Basic Model
-  Price:        299.99 MAD
-  Store:        Store A
-  Availability: In Stock
-  URL:          https://example.com/product1
+Product: laptop - Basic Model
+Price: 299.99 MAD
+Store: Store A
+Availability: In Stock
+URL: https://example.com/product1
+
 ```
 
 ## Project Structure
 
 ```
+
 Agent/
-├── main.py                      # Main entry point
+├── main.py # Main entry point
 ├── agent/
-│   ├── __init__.py             # Package initializer
-│   ├── product_searcher.py     # Main search agent class
-│   └── utils.py                # Utility functions
-├── requirements.txt            # Python dependencies
-└── README.md                   # This file
-```
+│ ├── **init**.py # Package initializer
+│ ├── product_searcher.py # Main search agent class
+│ └── utils.py # Utility functions
+├── requirements.txt # Python dependencies
+└── README.md # This file
+
+````
 
 ## Extending the Agent
 
@@ -137,7 +141,7 @@ def _search_site_name(self, product_name: str) -> List[Dict]:
     except Exception as e:
         print(f"Error: {e}")
     return products
-```
+````
 
 3. Call the new method in `search_products()`:
 
