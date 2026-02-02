@@ -90,66 +90,100 @@ You: What about gaming laptops?
 🤖 Agent: I'll search specifically for gaming laptops...
 ```
 
-#1
-Product: laptop - Basic Model
-Price: 299.99 MAD
-Store: Store A
-Availability: In Stock
-URL: https://example.com/product1
+## 📁 Project Structure
 
 ```
-
-## Project Structure
-
-```
-
 Agent/
-├── main.py # Main entry point
+├── main.py                      # Main entry point with LangChain agent
+├── .env                         # API keys (create from .env.example)
+├── .env.example                 # Environment template
+├── config.py                    # Configuration settings
 ├── agent/
-│ ├── **init**.py # Package initializer
-│ ├── product_searcher.py # Main search agent class
-│ └── utils.py # Utility functions
-├── requirements.txt # Python dependencies
-└── README.md # This file
+│   ├── __init__.py             # Package initializer
+│   ├── langchain_agent.py      # LangChain AI agent implementation
+│   ├── langchain_tools.py      # Custom tools for the agent
+│   ├── product_searcher.py     # Legacy search class (backup)
+│   ├── scrapers.py             # Web scraping implementations
+│   └── utils.py                # Utility functions
+├── requirements.txt            # Python dependencies
+└── README.md                   # This file
+```
 
-````
+## 🛠️ How the LangChain Agent Works
 
-## Extending the Agent
+The agent uses **ReAct (Reasoning + Acting)** pattern:
+
+1. **Thinks** - Analyzes what needs to be done
+2. **Acts** - Uses tools to search stores
+3. **Observes** - Reviews the results
+4. **Reasons** - Decides next steps
+5. **Responds** - Provides sorted results
+
+### Available Tools
+
+The agent has access to these tools:
+
+- `search_jumia_morocco` - Search Jumia
+- `search_marjane_online` - Search Marjane
+- `search_other_morocco_stores` - Search other stores
+- `compare_prices` - Sort and compare all results
+- `save_search_results` - Save to file
+
+## 🔧 Extending the Agent
 
 ### Adding New E-commerce Sites
 
-To add support for a new Moroccan e-commerce site:
-
-1. Open `agent/product_searcher.py`
-2. Add a new method following this pattern:
+Create a new tool in `agent/langchain_tools.py`:
 
 ```python
-def _search_site_name(self, product_name: str) -> List[Dict]:
-    """Search SiteName Morocco"""
-    products = []
-    try:
-        # Add your scraping logic here
-        # Return products in this format:
-        # {
-        #     'name': 'Product Name',
-        #     'price': 299.99,
-        #     'currency': 'MAD',
-        #     'store': 'Store Name',
-        #     'url': 'https://...',
-        #     'availability': 'In Stock'
-        # }
-    except Exception as e:
-        print(f"Error: {e}")
-    return products
-````
-
-3. Call the new method in `search_products()`:
-
-```python
-all_products.extend(self._search_site_name(product_name))
+@tool
+def search_new_store(product_name: str) -> str:
+    """
+    Search for products on NewStore Morocco.
+    """
+    # Your scraping logic here
+    products = [...]
+    return json.dumps(products)
 ```
 
-## Configuration
+Then add it to `MOROCCO_SEARCH_TOOLS` list.
+
+## ⚙️ Configuration
+
+### API Keys
+
+The agent requires an OpenAI API key. Get one from [platform.openai.com](https://platform.openai.com/api-keys)
+
+```bash
+# .env file
+OPENAI_API_KEY=sk-...your-key-here...
+```
+
+### Changing the LLM Model
+
+Edit [agent/langchain_agent.py](agent/langchain_agent.py):
+
+```python
+agent = MoroccoSearchAgent(
+    model="gpt-3.5-turbo",  # Cheaper, faster
+    # or model="gpt-4"       # More capable, slower
+    temperature=0
+)
+```
+
+### Alternative LLM Providers
+
+You can use Claude (Anthropic) or Gemini (Google) instead:
+
+```python
+# For Claude
+from langchain_anthropic import ChatAnthropic
+self.llm = ChatAnthropic(model="claude-3-sonnet-20240229")
+
+# For Gemini
+from langchain_google_genai import ChatGoogleGenerativeAI
+self.llm = ChatGoogleGenerativeAI(model="gemini-pro")
+```
 
 Currently uses mock data for demonstration. To enable real scraping:
 
@@ -158,35 +192,48 @@ Currently uses mock data for demonstration. To enable real scraping:
 3. Consider using APIs where available
 4. Add rate limiting to be respectful of servers
 
-## Dependencies
+## 📦 Key Dependencies
 
+- **LangChain** - AI agent framework
+- **OpenAI** - GPT models for intelligence
+- `langchain-openai` - OpenAI integration
+- `langchain-community` - Community tools
 - `requests` - HTTP requests
 - `beautifulsoup4` - HTML parsing
-- `lxml` - XML/HTML parser
-- `pandas` - Data manipulation (optional)
-- `aiohttp` - Async HTTP (optional, for faster scraping)
+- `selenium` - Advanced web scraping
+- `python-dotenv` - Environment variables
 
-## Notes
+## 📝 Notes
 
+- **AI Agent**: This uses LangChain's ReAct agent pattern with reasoning capabilities
+- **API Costs**: Using GPT-4 costs money per request; GPT-3.5-turbo is cheaper
 - Always respect websites' `robots.txt` and terms of service
 - Consider rate limiting to avoid overloading servers
 - Some sites may require authentication or have anti-scraping measures
 - Prices are displayed in MAD (Moroccan Dirham)
 
-## Future Enhancements
+## 🚀 Future Enhancements
 
 - [ ] Add more Moroccan e-commerce sites
-- [ ] Implement price tracking over time
-- [ ] Add price alerts
-- [ ] Export to CSV/Excel
+- [ ] Implement LangGraph for complex workflows
+- [ ] Add price tracking over time with memory
+- [ ] Add price alerts via email/SMS
+- [ ] Export to CSV/Excel with pandas
 - [ ] Web interface (Flask/FastAPI)
 - [ ] Real-time price monitoring
-- [ ] Product comparison charts
+- [ ] Product comparison charts and visualizations
+- [ ] Multi-language support (Arabic, French, English)
+- [ ] Voice interface for searching
 
-## License
+## 📄 License
 
-This project is for educational purposes. Make sure to comply with all applicable laws and terms of service when scraping websites.
+This project is for educational purposes. Make sure to comply with all applicable laws, terms of service, and API usage policies.
 
-## Contributing
+## 🤝 Contributing
 
-Feel free to add support for more Moroccan e-commerce sites or improve the existing functionality!
+Feel free to:
+
+- Add support for more Moroccan e-commerce sites
+- Improve the agent's reasoning capabilities
+- Add new tools for the agent
+- Enhance the scraping implementations

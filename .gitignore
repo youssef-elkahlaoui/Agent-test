@@ -1,5 +1,8 @@
 # .gitignore for Morocco Product Search Agent
 
+# Environment variables (IMPORTANT - never commit API keys!)
+.env
+
 # Python
 __pycache__/
 *.py[cod]
@@ -42,6 +45,13 @@ results_*.json
 
 # Logs
 *.log
+
+# LangChain/LangSmith
+.langchain/
+
+# ChromaDB
+chroma/
+*.db
 
 # OS
 .DS_Store
