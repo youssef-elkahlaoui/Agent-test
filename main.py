@@ -7,6 +7,7 @@ from agent.langchain_agent import MoroccoSearchAgent
 
 import sys
 
+
 def main():
     """Main function to run the LangChain-powered product search agent"""
     print("=" * 80)
@@ -93,5 +94,3 @@ if __name__ == "__main__":
         import traceback
 
         traceback.print_exc()
-
-

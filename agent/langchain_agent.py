@@ -20,11 +20,11 @@ class MoroccoSearchAgent:
     LangChain-powered agent for searching products in Morocco
     This agent can reason about which stores to check and how to compare prices
     """
-    
+
     def __init__(self, model="gemini-1.5-pro", temperature=0):
         """
         Initialize the LangChain agent
-        
+
         Args:
             model: Google Gemini model to use (gemini-1.5-pro, gemini-1.5-flash, gemini-pro, etc.)
             temperature: Temperature for the model (0 = more focused, 1 = more creative)
@@ -36,30 +36,27 @@ class MoroccoSearchAgent:
                 "Copy .env.example to .env and add your Google API key.\n"
                 "Get your key from: https://makersuite.google.com/app/apikey"
             )
-        
+
         # Initialize LLM (Google Gemini)
         self.llm = ChatGoogleGenerativeAI(
             model=model,
             temperature=temperature,
-            google_api_key=os.getenv("GOOGLE_API_KEY")
+            google_api_key=os.getenv("GOOGLE_API_KEY"),
         )
-        
+
         # Create the agent prompt
         self.prompt = self._create_prompt()
-        
+
         # Initialize memory
         self.memory = ConversationBufferMemory(
-            memory_key="chat_history",
-            return_messages=True
+            memory_key="chat_history", return_messages=True
         )
-        
+
         # Create the agent
         self.agent = create_react_agent(
-            llm=self.llm,
-            tools=MOROCCO_SEARCH_TOOLS,
-            prompt=self.prompt
+            llm=self.llm, tools=MOROCCO_SEARCH_TOOLS, prompt=self.prompt
         )
-        
+
         # Create agent executor
         self.agent_executor = AgentExecutor(
             agent=self.agent,
@@ -67,9 +64,9 @@ class MoroccoSearchAgent:
             memory=self.memory,
             verbose=True,
             handle_parsing_errors=True,
-            max_iterations=10
+            max_iterations=10,
         )
-    
+
     def _create_prompt(self) -> PromptTemplate:
         """Create the agent prompt template"""
         template = """You are a helpful shopping assistant specialized in finding the best prices for products in Morocco.
@@ -98,37 +95,43 @@ Current conversation:
 User: {input}
 
 Thought: {agent_scratchpad}"""
-        
+
         return PromptTemplate(
-            input_variables=["input", "chat_history", "agent_scratchpad", "tools", "tool_names"],
-            template=template
+            input_variables=[
+                "input",
+                "chat_history",
+                "agent_scratchpad",
+                "tools",
+                "tool_names",
+            ],
+            template=template,
         )
-    
+
     def search(self, product_name: str) -> str:
         """
         Search for a product using the AI agent
-        
+
         Args:
             product_name: Name of the product to search for
-            
+
         Returns:
             Agent's response with sorted results
         """
         query = f"Search for '{product_name}' in Morocco and show me the prices sorted from cheapest to most expensive."
-        
+
         try:
             result = self.agent_executor.invoke({"input": query})
             return result["output"]
         except Exception as e:
             return f"Error during search: {str(e)}"
-    
+
     def chat(self, message: str) -> str:
         """
         Have a conversation with the agent
-        
+
         Args:
             message: User's message
-            
+
         Returns:
             Agent's response
         """
@@ -145,18 +148,19 @@ class AdvancedMoroccoSearchAgent:
     Advanced agent using LangGraph for complex multi-step workflows
     Uncomment and implement if you need more sophisticated reasoning
     """
-    
+
     def __init__(self):
         """Initialize the advanced agent with LangGraph"""
         # TODO: Implement LangGraph workflow
         # This would allow for more complex decision trees and parallel processing
         pass
-    
-    def search_with_filters(self, product_name: str, max_price: float = None, 
-                           preferred_stores: list = None):
+
+    def search_with_filters(
+        self, product_name: str, max_price: float = None, preferred_stores: list = None
+    ):
         """
         Advanced search with filters
-        
+
         Args:
             product_name: Product to search for
             max_price: Maximum price filter

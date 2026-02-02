@@ -178,6 +178,7 @@ agent = MoroccoSearchAgent(
 You can switch to OpenAI GPT or Claude (Anthropic):
 
 **For OpenAI GPT:**
+
 ```python
 from langchain_openai import ChatOpenAI
 self.llm = ChatOpenAI(
@@ -187,6 +188,7 @@ self.llm = ChatOpenAI(
 ```
 
 **For Claude (Anthropic):**
+
 ```python
 from langchain_anthropic import ChatAnthropic
 self.llm = ChatAnthropic(
